@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://kit.fontawesome.com/05ef113fe5.js" crossorigin="anonymous"></script>
+  <script src="socket.io/socket.io.js"></script>
+  <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+  <script>
+    const ROOM_ID = "<%= roomId %>";
+    console.log(ROOM_ID) 
+  </script>
+  <title>Zoom-Clone</title>
+</head>
+<style>
+ 
+  .main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .main-video {
+    background-color: rgb(37, 34, 34);
+    flex:  0.9;
+  }
+  #video-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+.main-controls {
+  flex : 0.1;
+  display: flex;
+  justify-content: space-around;
+  background-color: aliceblue;
+  align-items: center;
+}
+
+  video {
+    height: 300px;
+    width: 450px;
+  }
+  .main-controls img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    margin-right: 20px;
+  }
+</style>
+
+<body>
+  <div class="main">
+    <div class="main-video">
+      <div id="video-grid">
+
+      </div>
+    </div> 
+    <div class="main-controls container">
+      <div class="audio">
+        <img id="camera" src="https://cdn.glitch.com/10c9d348-7ac9-4866-a5e9-597207407019%2Fphoto.png?v=1597338093155" alt="">
+        <img id="voice" src="https://cdn.glitch.com/10c9d348-7ac9-4866-a5e9-597207407019%2Fvoice-assistant.png?v=1597338107618" alt="">
+      </div>
+      <div class="chat">
+        <img id="security" src="https://cdn.glitch.com/10c9d348-7ac9-4866-a5e9-597207407019%2Fantivirus.png?v=1597338055366" alt="">
+        <img id="participants" src="https://cdn.glitch.com/10c9d348-7ac9-4866-a5e9-597207407019%2Ffollowers.png?v=1597337999798" alt="">
+        <img id="chat" src="https://cdn.glitch.com/10c9d348-7ac9-4866-a5e9-597207407019%2Fspeech-bubble.png?v=1597337961742" alt="">
+      </div>
+      <div class="end">
+        <button class="btn btn-secondary">End</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="script.js"></script>
+
+</html>
