@@ -1,3 +1,4 @@
+
 const express = require('express')
 const app = express();
 var server = require('http').createServer(app);
@@ -26,14 +27,17 @@ io.on("connection", socket => {
   var arrUserId = [];
   socket.on('join-room', (roomId, userId) => {
     // Adds the client to the room
-    arrUserId.push({
-      room: roomId,
-      userId : userId
-    })
+    arrUserId.push(userId)
    
     socket.join(roomId)
     // send to everyone except me
-    socket.to(roomId).broadcast.emit("user-connected", userId);
+    socket.to(roomId).broadcast.emit("user-connected", userId );
+
+    // receive from client 
+    socket.on('send-message' , mess => {
+      
+      socket.emit('message' , mess, userId);
+    })
   })
 })
 
