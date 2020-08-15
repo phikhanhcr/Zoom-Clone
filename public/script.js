@@ -14,25 +14,25 @@ const peer = new Peer(undefined, {
   path: '/peerjs'
 });
 
+let name;
+document.getElementById('signup').addEventListener('click', () => {
+  var username = document.getElementById('username');
+  if (username.value.length !== 0) {
+    console.log(username.value)
+    name = username.value;
+  }
+})
+console.log(name);
 // connect with client
 peer.on('open', (id) => {
   console.log(id)
-//  let name;
-//   document.getElementById('signup').addEventListener('click', () => {
-//     var username = document.getElementById('username');
-//     if (username.value.length !== 0) {
-//       console.log(username.value)
-//       name = username.value;
-//     }
-//   })
-//   console.log(name);
-  socket.emit('join-room', ROOM_ID, id ) 
+  socket.emit('join-room', ROOM_ID, id)
 })
 
 let myVideoStream;
 const config = {
   video: true,
-  audio: false
+  audio: true
 }
 
 
@@ -70,11 +70,21 @@ navigator.mediaDevices.getUserMedia(config)
         text.value = "";
       }
     })
+
+    // send to myself
     socket.on('message', (message, userId) => {
       console.log("from server " + message + " " + userId)
       var li = document.createElement('li');
       li.innerHTML = message;
       listMessage[0].appendChild(li);
+    })
+    // send to all user except me 
+    socket.on('all-chat', (messages) => {
+      messages.forEach(ele => {
+        var li = document.createElement('li');
+        li.innerHTML = ele;
+        listMessage[0].appendChild(li);
+      })
     })
 
 
@@ -105,3 +115,53 @@ const connectToNewUser = (userId, stream) => {
 
 
 
+
+const muteUnmute = () => {
+  const enabled = myVideoStream.getAudioTracks()[0].enabled; 
+  if(enabled) {
+    myVideoStream.getAudioTracks()[0].enabled = false 
+    setUnmuteButton()
+  } else {
+    myVideoStream.getAudioTracks()[0].enabled = true;
+    setMuteButton()
+  }
+}
+
+const playStop = () => {
+  let enabled = myVideoStream.getVideoTracks()[0].enabled;
+  if(enabled) {
+    myVideoStream.getVideoTracks()[0].enabled = false; 
+    setPlayVideo()
+  } else {
+    myVideoStream.getVideoTracks()[0].enabled = true;
+    setStopVideo()
+  }
+}
+
+const setUnmuteButton = () => {
+  const html = `<i class="unmute fas fa-microphone-slash"></i>
+  <span>Unmute</span>`;
+  document.querySelector('.main__mute_button').innerHTML = html;
+}
+const setMuteButton = () => {
+  const html = `<i class="fas fa-microphone"></i>
+  <span>Mute</span>`;
+  document.querySelector('.main__mute_button').innerHTML = html;
+}
+
+
+const setStopVideo = () => {
+  const html = `
+    <i class="fas fa-video"></i>
+    <span>Stop Video</span>
+  `
+  document.querySelector('.main__video_button').innerHTML = html;
+}
+
+const setPlayVideo = () => {
+  const html = `
+  <i class="stop fas fa-video-slash"></i>
+    <span>Play Video</span>
+  `
+  document.querySelector('.main__video_button').innerHTML = html;
+}

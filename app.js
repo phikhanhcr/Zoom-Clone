@@ -8,7 +8,7 @@ const port = 3000;
 const { ExpressPeerServer } = require('peer');
 const peerServer =
   ExpressPeerServer(server,
-    { debug : true }
+    { debug: true }
   );
 
 app.use('/peerjs', peerServer)
@@ -25,20 +25,27 @@ app.get('/:room', (req, res) => {
 // connect server and client
 io.on("connection", socket => {
   var arrUserId = [];
+  var arrMessage = [];
   socket.on('join-room', (roomId, userId) => {
     // Adds the client to the room
     arrUserId.push(userId)
-   
+
     socket.join(roomId)
     // send to everyone except me
-    socket.to(roomId).broadcast.emit("user-connected", userId );
+    socket.to(roomId).broadcast.emit("user-connected", userId);
 
     // receive from client 
-    socket.on('send-message' , mess => {
-      
-      socket.emit('message' , mess, userId);
+    socket.on('send-message', mess => {
+      arrMessage.push(mess)
+      console.log(arrMessage)
+      // send to myself
+      socket.emit('message', mess);
+      // send to all user except me 
+      socket.broadcast.emit('all-chat', arrMessage);
     })
   })
+
+
 })
 
 server.listen(port, () => {
